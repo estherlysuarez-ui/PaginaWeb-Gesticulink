@@ -31,7 +31,7 @@
             const dataURL = canvas.toDataURL('image/jpeg', 0.7);
             const base64Image = dataURL.split(',')[1]; // quitar prefijo
 
-            fetch('http://192.168.20.30:5000/emocion', {
+            fetch('http://10.77.57.89:5000/emocion', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ image: base64Image })
