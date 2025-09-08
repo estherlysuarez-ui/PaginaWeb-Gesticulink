@@ -4,30 +4,12 @@ import cv2
 from deepface import DeepFace
 import numpy as np
 import base64
-import serial
 
 app = Flask(__name__)
-CORS(app)  # <--- aquí habilitamos CORS
+CORS(app)  # habilita CORS para recibir peticiones desde cualquier origen
 
 emociones_permitidas = ["angry", "sad", "happy", "surprise"]
 porcentaje_minimo = 10
-
-# Configura el puerto COM correspondiente a tu ESP32
-SERIAL_PORT = 'COM3'  # Cambia según tu PC
-BAUD_RATE = 115200
-
-try:
-    ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
-except Exception as e:
-    ser = None
-    print(f"No se pudo abrir el puerto serial: {e}")
-
-def enviar_emocion_bluetooth(emocion):
-    if ser and ser.is_open:
-        try:
-            ser.write((emocion + '\n').encode())
-        except Exception as e:
-            print(f"Error enviando por Bluetooth: {e}")
 
 def detectar_emocion(frame):
     try:
@@ -65,9 +47,7 @@ def emocion():
         # Imprime en consola para verificación
         print(f"Emoción recibida del HTML: {emocion_detectada}")
 
-        # Envía al ESP32
-        enviar_emocion_bluetooth(emocion_detectada)
-
+        # Devuelve la emoción al cliente
         return jsonify({'emocion': emocion_detectada})
     except Exception as e:
         print(f"Error procesando imagen: {e}")
