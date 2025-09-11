@@ -29,6 +29,7 @@ def detectar_emocion(frame):
 
 @app.route('/emocion', methods=['POST'])
 def emocion():
+    print("Petición recibida")
     data = request.json
     img_data = data['image']
 
@@ -46,7 +47,7 @@ def emocion():
 
         # Imprime en consola para verificación
         print(f"Emoción recibida del HTML: {emocion_detectada}")
-
+        
         # Devuelve la emoción al cliente
         return jsonify({'emocion': emocion_detectada})
     except Exception as e:
@@ -54,4 +55,5 @@ def emocion():
         return jsonify({'error': 'no se pudo procesar la imagen'}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+        app.run(host='192.168.0.101', port=5000, debug=True,
+            ssl_context=('C:/Users/santi/Downloads/Noveno Semestre/Diseño Mecatronico/PaginaWeb-Gesticulink/flask_server.crt', 'C:/Users/santi/Downloads/Noveno Semestre/Diseño Mecatronico/PaginaWeb-Gesticulink/flask_server.key'))
