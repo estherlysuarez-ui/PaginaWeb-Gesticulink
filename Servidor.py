@@ -55,5 +55,4 @@ def emocion():
         return jsonify({'error': 'no se pudo procesar la imagen'}), 400
 
 if __name__ == '__main__':
-        app.run(host='192.168.0.101', port=5000, debug=True,
-            ssl_context=('C:/Users/santi/Downloads/Noveno Semestre/Diseño Mecatronico/PaginaWeb-Gesticulink/flask_server.crt', 'C:/Users/santi/Downloads/Noveno Semestre/Diseño Mecatronico/PaginaWeb-Gesticulink/flask_server.key'))
+        app.run(host='127.0.0.1', port=5000, debug=True,)

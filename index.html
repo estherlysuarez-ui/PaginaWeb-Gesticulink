@@ -2,36 +2,41 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Prueba Cámara</title>
+    <title>Prueba Cámara Continua a Flask</title>
 </head>
 <body>
-    <h2>Prueba Cámara</h2>
+    <h2>Envío continuo de la cámara al Flask</h2>
     <video id="video" autoplay playsinline width="640" height="480"></video>
+
+    <h3>Emoción detectada: <span id="emocion">Ninguna</span></h3>
 
     <script>
         const video = document.getElementById('video');
+        const emocionSpan = document.getElementById('emocion');
 
-        // Abrir la cámara
+        // Abrir la cámara del computador
         navigator.mediaDevices.getUserMedia({ video: true, audio: false })
             .then(stream => {
                 video.srcObject = stream;
             })
             .catch(err => {
                 console.error("Error al acceder a la cámara:", err);
+                alert("No se pudo acceder a la cámara");
             });
 
+        // Crear canvas para capturar imagen
         const canvas = document.createElement('canvas');
         canvas.width = 640;
         canvas.height = 480;
         const ctx = canvas.getContext('2d');
 
-        // Enviar frame cada 500 ms
+        // Enviar frame cada 1 segundo
         setInterval(() => {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             const dataURL = canvas.toDataURL('image/jpeg', 0.7);
-            const base64Image = dataURL.split(',')[1]; // quitar prefijo
+            const base64Image = dataURL.split(',')[1];
 
-            fetch('https://192.168.0.101:5000/emocion', {
+            fetch('http://127.0.0.1:5000/emocion', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ image: base64Image })
@@ -39,11 +44,13 @@
             .then(response => response.json())
             .then(data => {
                 console.log("Emoción detectada:", data.emocion);
+                emocionSpan.textContent = data.emocion; // Mostrar en la página
             })
             .catch(err => {
                 console.error("Error enviando la imagen:", err);
+                emocionSpan.textContent = "Error";
             });
-        }, 500); // cada 500 ms
+        }, 1000); // cada 1 segundo
     </script>
 </body>
 </html>
